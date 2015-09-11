@@ -16,7 +16,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class WITCMapper extends Mapper<LongWritable, Text, Text, Text> {
+public class WITCMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
     
     private final static String TITLE_REGEX="<TITLE>(.*)</TITLE>";
     private static Pattern titlePattern= Pattern.compile(TITLE_REGEX);
@@ -54,17 +54,20 @@ public class WITCMapper extends Mapper<LongWritable, Text, Text, Text> {
                 m = boddyPattern01.matcher(line);
                 if (m.find()){
                     String body_part= m.group(1);
-                    context.write(new Text(title_key), new Text(body_part));                
+                    String words[]= body_part.split("([().,!?:;'\"-]|\\s)+");
+                    context.write(new Text(title_key), new IntWritable(words.length));                
                 }else {
                     m = boddyPattern03.matcher(line);
                     if (m.find()) {
                         String body_part = m.group(1);
-                        context.write(new Text(title_key), new Text(body_part));
+                        String words[]= body_part.split("([().,!?:;'\"-]|\\s)+");
+                        context.write(new Text(title_key), new IntWritable(words.length));
                     }else{
                         m = boddyPattern02.matcher(originalLine);
                         if (!m.find()) {
                             String body_part= line;
-                            context.write(new Text(title_key), new Text(body_part));
+                            String words[]= body_part.split("([().,!?:;'\"-]|\\s)+");
+                            context.write(new Text(title_key), new IntWritable(words.length));
                         }
                     }
                 }

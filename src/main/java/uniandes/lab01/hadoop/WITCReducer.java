@@ -20,18 +20,15 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class WITCReducer extends Reducer<Text, Text, Text, IntWritable> {
+public class WITCReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 	@Override
-	protected void reduce(Text key, Iterable<Text> values,
+	protected void reduce(Text key, Iterable<IntWritable> values,
 			Context context)
 			throws IOException, InterruptedException {
-            Iterator<Text> i = values.iterator();
             int counter=0;
             String textv="";
-            for(Text t : values) {
-                textv = t.toString();
-                String words[]= textv.split("([().,!?:;'\"-]|\\s)+");  
-                counter = counter + words.length;
+            for(IntWritable i : values) {
+                counter = counter + i.get();
             }
             context.write(new Text(key), new IntWritable(counter));
 	}

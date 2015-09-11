@@ -56,7 +56,7 @@ public class NewsHadoopJob {
 		wcJob.setMapperClass(WITCMapper.class);
 		
 		wcJob.setMapOutputKeyClass(Text.class);
-		wcJob.setMapOutputValueClass(Text.class);
+		wcJob.setMapOutputValueClass(IntWritable.class);
 		///////////////////////////
 		//Reducer
 		///////////////////////////
